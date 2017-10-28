@@ -1,0 +1,24 @@
+shell> sudo apt-get install mysql-server
+
+shell> sudo apt-get install mysql-workbench-community
+
+
+--https://dev.mysql.com/doc/refman/5.7/en/data-directory-initialization-mysqld.html
+
+C:\> bin\mysqld --install
+C:\> bin\mysqld --remove
+
+--Iniciar
+C:\> bin\mysqld --initialize
+C:\> bin\mysqld --initialize-insecure
+
+shell> bin/mysqld --initialize --user=mysql
+shell> bin/mysqld --initialize-insecure --user=mysql
+
+
+-- Conectar
+shell> mysql -u root -p
+shell> mysql -u root --skip-password
+
+--Mudar senha
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
