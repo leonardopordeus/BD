@@ -1,0 +1,3 @@
+ceiot.ckaxlsag9vys.sa-east-1.rds.amazonaws.com:8080
+aluno1, aluno2,...
+1EswL*lr
