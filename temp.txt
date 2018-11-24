@@ -1,3 +1,7 @@
 ceiot.ckaxlsag9vys.sa-east-1.rds.amazonaws.com:8080
 aluno1, aluno2,...
 1EswL*lr
+
+
+Trigger AWS
+https://techtavern.wordpress.com/2013/06/17/mysql-triggers-and-amazon-rds/
