@@ -1,0 +1,129 @@
+1)Instalação
+pip install Django
+pip install mysqlclient
+django-admin --version
+python -m django --version
+
+2)Cofigurar um projeto
+django-admin startproject ceioproject
+
+3) Run
+python manage.py runserver
+
+4) Config Banco => Em settings.py configurar
+DATABASES = {
+    'default': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'exemplo_aula',
+        'USER': 'user_ceiot',
+        'PASSWORD': '12345678',
+        'HOST': 'ceiot.ckaxlsag9vys.sa-east-1.rds.amazonaws.com',
+        'PORT': '8080',
+    }
+}
+
+5)Cria uma aplicação
+python manage.py startapp exemploAula
+
+6) Adicionar aplicação em installed apps
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'exemploAula',
+]
+
+7) Configurar a app
+python manage.py migrate
+python manage.py createsuperuser
+
+8)Criar modelo e exportar
+
+exemploAula.models:
+"
+from django.db import models
+
+# Create your models here.
+class Aluno(models.Model):    
+    nome = models.CharField(max_length=200)    
+
+class Departamento(models.Model):    
+    name = models.CharField(max_length=200)
+
+class Professor(models.Model):
+    departemento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=200)
+"
+python manage.py makemigrations exemploAula
+
+9) Gerar SQL
+python manage.py sqlmigrate exemploAula 0001
+
+10)Atualiza BD
+python manage.py migrate
+
+11) Registrar modelo
+exemploAula.admin:
+"
+from django.contrib import admin
+from exemploAula.models import Aluno
+from exemploAula.models import Departamento
+from exemploAula.models import Professor
+
+admin.site.register(Aluno)
+admin.site.register(Departamento)
+admin.site.register(Professor)
+"
+
+12) Definir Views e Configurar URLs
+"
+from django.contrib import admin
+from django.urls import path
+from exemploAula.views import hello,listAlunos,listAlunosByName,addAluno
+urlpatterns = [
+    path('admin/', admin.site.urls),    
+    path('hello/', hello, name = 'hello'),
+    path('listAlunos/', listAlunos, name = 'listAlunos'),
+    path('listAlunosByName/', listAlunosByName, name = 'listAlunosByName'),
+    path('addAluno/', addAluno, name = 'addAluno'),
+]
+"
+
+13) Implementar Consultas em Views
+
+"
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+from exemploAula.models import Aluno, Departamento, Professor
+
+# # Create your views here.
+
+def hello(request):
+   text = """<h1>welcome to my app !</h1>"""
+   return HttpResponse(text)
+
+def listAlunos(request):   
+   list = serializers.serialize('json',  Aluno.objects.all())
+   return HttpResponse(list, content_type="application/json")
+   #return JsonResponse(list, safe=False)
+
+def listAlunosByName(request):
+   nome = request.GET['name']
+   list = serializers.serialize('json',  Aluno.objects.all().filter(nome=nome))
+   return HttpResponse(list, content_type="application/json")
+
+def addAlunoGet(request):
+   nome = request.GET['name']
+   a = Aluno(nome=nome)
+   a.save()      
+   return HttpResponse(a, content_type="application/json")
+"
+
+#Tutorial Consulta
+https://docs.djangoproject.com/en/2.1/topics/db/queries/
+https://django-portuguese.readthedocs.io/en/1.0/topics/db/queries.html
